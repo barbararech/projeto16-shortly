@@ -55,7 +55,7 @@ export async function openURL(req, res) {
     if (url.length === 0) {
       return res.sendStatus(404);
     }
-    console.log(shortUrl);
+
     const increment = url[0].visitCount + 1;
 
     await connection.query(
@@ -65,6 +65,33 @@ export async function openURL(req, res) {
     );
 
     return res.redirect(url[0].url);
+  } catch (error) {
+    return res.status(400).send(error);
+  }
+}
+
+export async function deleteURL(req, res) {
+  const idUser = res.locals.id;
+  const idUrl = req.params.id;
+  console.log(idUser);
+  console.log(idUrl);
+  try {
+    const { rows: url } = await connection.query(
+      `SELECT * FROM urls WHERE id = $1;`,
+      [idUrl]
+    );
+    console.log(url[0].userId);
+    if (url.length === 0) {
+      return res.sendStatus(404);
+    }
+
+    if (url[0].userId !== idUser) {
+      return res.sendStatus(401);
+    }
+
+    await connection.query(`DELETE FROM urls WHERE id = $1`, [idUrl]);
+
+    return res.sendStatus(204);
   } catch (error) {
     return res.status(400).send(error);
   }

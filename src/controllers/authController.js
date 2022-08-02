@@ -13,7 +13,7 @@ export async function signUp(req, res) {
     }
 
     const { rows: userExist } = await connection.query(
-      "SELECT * FROM users WHERE email = $1;",
+      `SELECT * FROM users WHERE email = $1;`,
       [user.email]
     );
 
