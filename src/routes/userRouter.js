@@ -5,7 +5,7 @@ import { ValidateSignIn} from "../middlewares/userSchemaValidationMiddleware.js"
 
 const router = Router();
 
-// router.post("/signin", ValidateSignIn, signIn);
 router.post("/signup", ValidateSignUp, signUp);
+router.post("/signin", ValidateSignIn, signIn);
 
 export default router;
