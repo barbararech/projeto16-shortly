@@ -1,5 +1,4 @@
-import { signUpSchema } from "../schemas/userSchema.js";
-import { signInSchema } from "../schemas/userSchema.js";
+import { signUpSchema, signInSchema } from "../schemas/userSchema.js";
 
 export async function ValidateSignUp(req, res, next) {
   const validation = signUpSchema.validate(req.body, { abortEarly: false });
