@@ -1,8 +1,9 @@
 import express, { json } from "express";
 import cors from "cors";
 
-import userRouter from "./routes/authRouter.js"
+import authRouter from "./routes/authRouter.js"
 import urlRouter from "./routes/urlRouter.js"
+import userRouter from "./routes/userRouter.js"
 
 const app = express();
 app.use(cors());

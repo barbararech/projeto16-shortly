@@ -56,12 +56,19 @@ export async function openURL(req, res) {
       return res.sendStatus(404);
     }
 
-    const increment = url[0].visitCount + 1;
-
     await connection.query(
       `UPDATE urls
-            SET "visitCount"=$1`,
-      [increment]
+            SET "visitCount"= "visitCount" + 1
+            WHERE "shortUrl" = $1;
+            `,
+      [shortUrl]
+    );
+
+    await connection.query(
+      `UPDATE users
+              SET "visitCount"="visitCount" + 1
+              WHERE id = $1`,
+      [url[0].userId]
     );
 
     return res.redirect(url[0].url);
@@ -73,14 +80,13 @@ export async function openURL(req, res) {
 export async function deleteURL(req, res) {
   const idUser = res.locals.id;
   const idUrl = req.params.id;
-  console.log(idUser);
-  console.log(idUrl);
+
   try {
     const { rows: url } = await connection.query(
       `SELECT * FROM urls WHERE id = $1;`,
       [idUrl]
     );
-    console.log(url[0].userId);
+
     if (url.length === 0) {
       return res.sendStatus(404);
     }
