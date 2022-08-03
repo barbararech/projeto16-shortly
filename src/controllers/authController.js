@@ -37,7 +37,6 @@ export async function signUp(req, res) {
 }
 
 export async function signIn(req, res) {
-  
   try {
     const { email, password } = req.body;
     const { rows: user } = await connection.query(
@@ -54,10 +53,10 @@ export async function signIn(req, res) {
     if (!checkPassword) {
       return res.sendStatus(401);
     }
-    console.log(user)
+
     const secretKey = process.env.JWT_SECRET;
     const token = jwt.sign({ id: user[0].id }, secretKey);
-    console.log(token)
+
     return res.status(200).send({ token });
   } catch (error) {
     return res.status(500).send(error);
