@@ -20,7 +20,7 @@ export async function addURL(req, res) {
 
     return res.status(201).send({ shortUrl });
   } catch (error) {
-    return res.status(400).send(error);
+    return res.status(500).send(error);
   }
 }
 
@@ -39,7 +39,7 @@ export async function getURL(req, res) {
 
     return res.status(200).send(url);
   } catch (error) {
-    return res.status(400).send(error);
+    return res.status(500).send(error);
   }
 }
 
@@ -73,7 +73,7 @@ export async function openURL(req, res) {
 
     return res.redirect(url[0].url);
   } catch (error) {
-    return res.status(400).send(error);
+    return res.status(500).send(error);
   }
 }
 
@@ -99,6 +99,6 @@ export async function deleteURL(req, res) {
 
     return res.sendStatus(204);
   } catch (error) {
-    return res.status(400).send(error);
+    return res.status(500).send(error);
   }
 }

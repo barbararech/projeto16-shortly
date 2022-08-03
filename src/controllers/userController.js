@@ -4,15 +4,6 @@ export async function getUser(req, res) {
   const { id } = res.locals;
 
   try {
-    // const { rows: user } = await connection.query(
-    //   `SELECT * FROM users WHERE id = $1;`,
-    //   [id]
-    // );
-    // console.log(user);
-    // if (user.length === 0) {
-    //   return res.sendStatus(404);
-    // }
-
     const { rows: user } = await connection.query(
       `
       SELECT 
@@ -36,8 +27,12 @@ export async function getUser(req, res) {
       [id]
     );
 
-    return res.status(200).send( user );
+    if (user.length === 0) {
+      return res.sendStatus(404);
+    }
+
+    return res.status(200).send(user);
   } catch (error) {
-    return res.status(400).send(error);
+    return res.status(500).send(error);
   }
 }
