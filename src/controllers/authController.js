@@ -1,4 +1,4 @@
-import connection from "../dbStrategy/postgres.js";
+import { userRepository } from "../repositories/userRepositories.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
@@ -12,23 +12,13 @@ export async function signUp(req, res) {
       return res.status(422).send("As senhas não coincidem!");
     }
 
-    const { rows: userExist } = await connection.query(
-      `SELECT * FROM users WHERE email = $1;`,
-      [user.email]
-    );
+    const { rows: userExist } = await userRepository.getUserByEmail(email);
 
     if (userExist.length !== 0) {
       return res.sendStatus(409);
     }
 
-    await connection.query(
-      `INSERT INTO users (
-              name, 
-              email, 
-              password) 
-            VALUES ($1, $2, $3);`,
-      [name, email, password]
-    );
+    await userRepository.addUser(name, email, password);
 
     res.sendStatus(201);
   } catch (error) {
@@ -39,10 +29,7 @@ export async function signUp(req, res) {
 export async function signIn(req, res) {
   try {
     const { email, password } = req.body;
-    const { rows: user } = await connection.query(
-      `SELECT * FROM users WHERE email = $1;`,
-      [email]
-    );
+    const { rows: user } = await userRepository.getUserByEmail(email);
 
     if (user.length === 0) {
       return res.sendStatus(401);
